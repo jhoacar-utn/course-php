@@ -1,0 +1,16 @@
+{
+    "name": "jhoacar/course-php",
+    "autoload": {
+        "psr-4": {
+            "Jhoacar\\CoursePhp\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "jhoacar",
+            "email": "carrerojhoan@gmail.com"
+        }
+    ],
+    "require": {},
+    "config": {}
+}
