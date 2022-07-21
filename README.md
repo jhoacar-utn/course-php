@@ -6,9 +6,24 @@
 
 * Lenguajes de Programacion (Compilados e Interpretados)
   * Metafora: Recetas de Cocina
-* Fundamentos de Git
-  * Commits: `git commit`
-  * Ramas: `git branch` y `git checkout`
+* Comandos de Git:
+  * `git clone`: Clona un repositorio remoto en la maquina local, ejemplo: `git clone https://github.com/jhoacar-utn/course-php`
+  * `git status`: Muestra el estado actual del respositorio que se encuentra
+  * `git branch`: Control de ramas en git, ejemplo: `git branch -a` (muestra todas las ramas del repositorio, tanto local como remotas)
+    * `git branch un_nombre_cualquiera` Crea una rama con un nombre que se desee
+    * `git branch -d un_nombre_cualquiera` Elimina una rama con un nombre que se desee
+    * `git branch -D un_nombre_cualquiera` Elimina una rama a fuerza bruta con un nombre que se desee
+    * `git branch -m otro_nombre_cualquiera` Cambia el nombre de la rama actual a otro_nombre_cualquiera.
+  * `git checkout`: Control de cambios entre ramas, permite ir y volver entre ellas, ejemplo: `git checkout otra_rama`
+    * `git checkout -b nueva_rama` Crea una rama y se mueve hacia ella en este solo comando
+  * `git add`: Añade al **stage** un archivo, archivos o carpetas, ejemplo: `git add .` (añade toda la carpeta actual)
+  * `git restore`: Regresa los cambios realizados en los archivos o carpetas, ejemplo: `git restore .` (restaura los cambios que no han ido al **stage** de toda la carpeta actual)
+    * `--staged` Regresa los cambios que fueron guardados en el **stage**
+  * `git commit`: Añade los cambios del **stage** al historial de commits, ejemplo: `git commit -m "mi primer commit"` (guarda en la linea de tiempo un commit por nombre "mi primer commit")
+    * `-m` Se especifica un mensaje para el **commit**
+  * `git push`: Sube los cambios que se han realizado al repositorio remoto hacia una rama especifica, ejemplo: `git push origin jhoan_carrero`
+    * `-f` realiza un push por fuerza bruta, no recomendado, puede borrar commits no deseados
+  * `git pull`: Actualiza los cambios que se han realizado en remoto con la maquina local, ejemplo: `git pull origin jhoan_carrero`
 * Instalacion de Docker
   * [Docker Desktop](https://www.docker.com/products/docker-desktop/)
   * Windows o Mac `virtualizacion del sistema operativo`
@@ -26,6 +41,33 @@
   * HTML,CSS,Javascript
   * Conocimientos del DOM
 * Trabajo Practico de Nivelacion
+
+## Clase 3 (Introduccion a Docker)
+
+* ¿Que es Docker? ¿Para que me puede servir?
+  * Diferencia entre **maquina virtual** y **contenedor**
+* Imagenes en Docker
+  * Comandos utiles
+    * `docker images`: Lista todas las imagenes que se hayan descargado
+    * `docker pull`: Descarga una imagen del repositorio de [docker hub](https://hub.docker.com/)
+    * `docker build`: Permite construir una imagen con el uso de un archivo `Dockerfile`, ejemplo: `docker build .` (se especifica que en la carpeta actual hay un archivo `Dockerfile` para construir la imagen)
+      * `docker build -t`: Se le especifica con el parametro `-t` el nombre de la imagen a contruir, ejemplo: `docker build -t mi-imagen:v1` (con el `:` le puedo especificar la version)
+* Contenedores
+  * Comandos utiles
+    * `docker ps`: Lista todos los contenedores que se estan ejecutando
+      * `-a` Lista todos los contenedores incluso aquellos que se han detenido
+    * `docker run`: Levanta un **nuevo** contenedor con alguna imagen que se especifique, ejemplo: `docker run ubuntu echo "Hello World"` (el texto `echo "Hello World"` es un comando que se va a ejecutar en el contenedor apenas arranque)
+      * `--name` Se le especifica un nombre al contenedor, por defecto es aleatorio
+      * `-d` Se le especifica al contenedor que se ejecute en segundo plano
+      * `--rm` Elimina el contenedor luego de ejecutado
+      * `-it` Habilita el modo interactivo por consola, permitiendo asi ejecutar comandos adentro del contenedor, ejemplo: `docker run -it ubuntu bash` (aparecera un consola de bash para poder ejecutar comandos)
+      * `-p` Muy util para especificar puertos a exponer entre el host y el contenedor, es decir, que haga match con algun puerto adentro del mismo y lo muestre afuera en el host, ejemplo:
+      `docker run -p 9090:80 ubuntu` (la sintaxis es **host_port:container_port** )
+      * `-v` Al igual que el parametro `-p` que hace match entre contenedor y host, este parametro nos viene muy util para hacer match entre carpetas, es decir, voy a poder tener archivos en el contenedor que estan en mi maquina, y asi si realizo algun cambio es afectado en ambos, ejemplo: `docker run -v $(pwd):/app` (al escribir `$(pwd)` lo que hago es hacer uso del directorio actual, `$()` permite ejecutar comandos y mostrar la salida y `pwd` es el comando para imprimir la ruta del directorio actual, la sintaxis es **/host/volume/location:/container/storage**)
+      * `-e` Asigna variables de entorno adentro del contenedor, ejemplo: `docker run --env VAR1=value1 --env VAR2=value2 ubuntu`
+* Docker Compose
+  * Configuracion de YAML - `docker-compose.yaml` o `docker-compose.yml`
+    * `docker-compose up -d` Corre todos los contenedores en segundo plano como se especifican en el archivo de configuracion
 
 ## Clase 2 (Introduccion a PHP)
 
@@ -195,7 +237,7 @@
   * `php://input` - Flujo de entrada de solo lectura con el contenido del usuario en el caso de peticiones `POST`
   * `php://output` - Flujo de solo escritura que permite escribir en el buffer (memoria ram) de salida tal como lo hacen `print` y `echo`.
   * `php://temp` - Flujo de lectura y escritura pero almacenara los datos en memoria (disco solido o rigido), util para guardar archivos temporales como imagenes o archivos que envia el usuario, la ubicacion de la carpeta donde se guardan temporalmente se puede saber invocando la funcion `sys_get_temp_dir()`
-    * Importante: `php://memory` y `php://temp` no son reutilizabes, esto es, debepués de que los flujos hayan sido cerrados, no hay forma de hacer referencia a ellos de nuevo
+    * Importante: `php://memory` y `php://temp` no son reutilizabes, esto es, despues de que los flujos hayan sido cerrados, no hay forma de hacer referencia a ellos de nuevo
 
      ```php
      <?php
