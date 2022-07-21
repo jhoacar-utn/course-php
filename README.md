@@ -31,18 +31,23 @@
   * IP (Protocolo de Internet, Ubicacion en la red de una maquina)
   * Puertos (Servicios que brinda la maquina, ejemplo el puerto 80 es para servicio web)
   * TCP (Protocolo de Control de Transmision)
+    * Comunicacion garantizada, ejemplo paginas web
   * UDP (Protocolo de Datagramas de Usuario)
+    * Velocidad garantizada, ejemplo videollamadas
   * HTTP (Protocolo de Transferencia de HyperTexto)
     * Cabeceras
+      * Cookies, Tokens, Informacion del Navegador,...
     * Verbos
+      * Get, Post, Put,...
     * Body
+      * Datos del usuario
   * DNS (Servicios de Nombres de Dominio)
 * Navegacion Web
   * HTML,CSS,Javascript
   * Conocimientos del DOM
 * Trabajo Practico de Nivelacion
 
-## Clase 3 (Introduccion a Docker)
+## Clase 2 (Introduccion a Docker)
 
 * ¿Que es Docker? ¿Para que me puede servir?
   * Diferencia entre **maquina virtual** y **contenedor**
@@ -69,7 +74,7 @@
   * Configuracion de YAML - `docker-compose.yaml` o `docker-compose.yml`
     * `docker-compose up -d` Corre todos los contenedores en segundo plano como se especifican en el archivo de configuracion
 
-## Clase 2 (Introduccion a PHP)
+## Clase 3 (Introduccion a PHP)
 
 * ¿Que es PHP? - Historia
   * Servidores
@@ -99,7 +104,7 @@
   * Mostrando la informacion de las variables con `echo`,`print_r` y `var_dump`
   * Declaracion de variables
 
-## Clase 3 (Condicionales y Bucles)
+## Clase 4 (Condicionales y Bucles)
 
 * Declaracion de condicionales
   * `if`
@@ -122,7 +127,7 @@
   * Comentarios para documentacion ([PHPDocs Basics](https://phpstan.org/writing-php-code/phpdocs-basics))
 * Practica de variables, ciclos y condicionales
 
-## Clase 4 (Funciones en PHP)
+## Clase 5 (Funciones en PHP)
 
 * Semantica de funciones
 * Argumentos en funciones
@@ -141,7 +146,7 @@
   * Uso de `include`, `include_once`,`require` y `require_once`
 * Practica de funciones usando array callbacks
 
-## Clase 5 (Introduccion a POO con PHP)
+## Clase 6 (Introduccion a POO con PHP)
 
 * ¿Que es POO? ¿Para que me puede servir?
   * Caracteristicas de POO
@@ -158,7 +163,7 @@
   * Ejemplo de Encapsulamiento de clase base (ocultamiento del estado)
     * ![Encapsulamiento](https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/03_Encapsulamiento.jpg/450px-03_Encapsulamiento.jpg)
 
-## Clase 6 (Herencia y Abstraccion)
+## Clase 7 (Herencia y Abstraccion)
 
 * ¿Que es la Herencia? ¿Que es la Abstraccion?
   * Abstraccion
@@ -174,7 +179,7 @@
     * Uso de `traits` con `use`
 * Practica sobre herencia simple y herencia multiple
 
-## Clase 7 (Polimorfismo)
+## Clase 8 (Polimorfismo)
 
 * ¿Que es el Polimorfismo?
   * Poli: muchas - morfismo: formas
@@ -185,7 +190,7 @@
   * Uso de `abstract` para definir clases abstractas que poseen atributos con metodos abstractos que definen un contrato a cumplir
 * Practica sobre polimorfismo con vectores polimorficos
 
-## Clase 8 (Clase de Repaso y Consultas)
+## Clase 9 (Clase de Repaso y Consultas)
 
 * Repaso sobre servidores
 * Resolucion de problemas con docker
@@ -193,10 +198,65 @@
 * Repaso sobre Programacion Orientada a Objetos
 * Herencia, Abstraccion y Polimorfismo
 
-## Clase 9 (Namespace y Autoloading)
+## Clase 10 (Namespace, Control de Excepciones y Autoloading)
 
 * ¿Que es el namespacing?
   * Uso de `namespace` para definir un espacio de nombres
+* ¿Como se controlan los errores?
+  * [Tipos de errores](https://cybmeta.com/tipos-de-errores-en-php)
+    * Errores fatales: detienen el flujo de la aplicacion
+
+      ```php
+      <?php
+      $objeto;
+      # La declaracion de esta variable ha sido interpretada y se le ha asignado un valor nulo
+      # Esto quiere decir que $objeto === null, por lo tanto sera un excepcion critica invocar
+      # un metodo llamado 'obtenerNombre' en algo que esta vacio
+      echo $objeto->obtenerNombre();
+      ?>
+      ```
+
+    * Errores de warning: no detienen el flujo de la aplicacion, pero se mostrara un mensaje de advertencia
+
+      ```php
+      <?php
+      $numerador = 5;
+      $denominador = 0;
+      # La division por cero aunque seria tratada en otros lenguajes como una excepcion
+      # Aca se trabaja como un warning y se imprimira la palabra 'INF' como resultado
+      echo $numerador/$denominador;
+      ?>
+      ```
+
+    * Errores de Notice: son los errores mas bajos o de menor prioridad y por defecto no se muestran pero podria darse el caso de que se activen
+
+      ```php
+      <?php
+      $name = "Manolo";
+      //$nombre es una variable que no ha sido definida antes de su uso. Su valor es NULL.
+      echo 'Tu nombre es ' . $nombre;
+      ?>
+      ```
+
+* Uso del `throw` para arrojar nuevos errores, ejemplo: `throw new Error('nuevo error');`
+* Uso del `try` y `catch` para poder manejar estos errores sin detener el flujo de la aplicacion
+* Uso del `finally` para ejecutar codigo que se requiera siempre
+
+    ```php
+      try {
+        $numerador = 5;
+        $denominador = 0;
+        if ($numerador/$denominador === INF) {
+            throw new Error('<br>Estas diviendo por cero y no se puede<br>');
+        }
+        echo $numerador/$denominador;
+      } catch (\Throwable $error) {
+          echo $error->getMessage();
+      } finally {
+          echo "<br>Se ha realizado la division<br>";
+      }
+    ```
+
 * ¿Que es el autoloading?
   * Estandares para el autoloading
     * [PSR-4](https://www.php-fig.org/psr/psr-4/)
@@ -212,7 +272,7 @@
   * Uso del archivo `.gitignore`
 * Practica para hacer uso de autoloading con `use` para las clases o funciones
 
-## Clase 10 (Configuracion de Proyecto con composer.json)
+## Clase 11 (Configuracion de Proyecto con composer.json)
 
 * Atributos de composer.json
   * Autoload - Define el estandar a autocargar las clases
@@ -230,7 +290,21 @@
   * Dependencia para manejar [testing](https://phpunit.de/getting-started/phpunit-9.html) en la app - `composer require --dev phpunit`
 * Practica para manejar peticiones por HTTP y realizando testing con script `composer test`
 
-## Clase 11 (Wrappers de PHP)
+## Clase 12 (Configuracion del entorno de desarrollo)
+
+* ¿Que es un linter? ¿Para que me puede servir?
+  * [PHP-CS-Fixer](https://github.com/FriendsOfPHP/PHP-CS-Fixer) (estandar actual)
+* Test unitarios con PHPUnit
+  * [PHPUnit](https://phpunit.de/getting-started/phpunit-9.html) (mas usado)
+* Generador de documentacion de codigo PHP
+  * Necesario trabajar con PHPDocs
+  * [PHPDoc](https://www.phpdoc.org/) (recomandable usarlo con docker)
+
+    ```docker
+    docker run --rm -v ${PWD}:/data phpdoc/phpdoc:3
+    ```
+
+## Clase 13 (Wrappers de PHP)
 
 * ¿Que es un wrapper? - [Protocolos y Envolturas](https://www.php.net/manual/es/wrappers.php)
 * Wrapper [php://](https://www.php.net/manual/es/wrappers.php.php)
