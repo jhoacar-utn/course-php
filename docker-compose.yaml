@@ -1,34 +1,48 @@
-version: "3"
-services:
-    www:
-        build: .
-        ports:
-            - "8001:80"
-        volumes:
-            - ./:/var/www/html/
-        links:
-            - db
-        networks:
-            - default
-    db:
-        image: mysql:8.0.16
-        command: ['--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci','--default-authentication-plugin=mysql_native_password']
-        ports:
-            - "3306:3306"
-        environment:
-            MYSQL_DATABASE: test
-            MYSQL_USER: user
-            MYSQL_PASSWORD: test
-            MYSQL_ROOT_PASSWORD: test
-        networks:
-            - default
-    phpmyadmin:
-        image: phpmyadmin/phpmyadmin:4.8
-        links:
-            - db:db
-        ports:
-            - 8000:80
-        environment:
-            MYSQL_USER: user
-            MYSQL_PASSWORD: test
-            MYSQL_ROOT_PASSWORD: test
+version: "3" # Nosotros especificamos la version del docker-compose
+services: # Declaramos los servicios
+    # Llamamos un servicio, como www, pero puede llevar cualquier nombre
+    # Lo importante esque este nombre sera el nombre usado en la red interna de docker
+    www: 
+        build: . # Le decimos que construya una imagen que usara este contenedor
+        restart: always # Si algo falla al crearse el contenedor, se vuelve a reiniciar
+        image: course:1.0.0 # Luego de construida la imagen que le ponga el nombre de course en la version 1.0
+        container_name: course # Este sera el nombre del contenedor, viene siendo el uso de --name
+        ports: # Le especificamos la configuracion de los puertos del host y el contenedor
+            - "8000:80" # La sintaxis es "puerto-host":"puerto-contenedor", entonces veremos la pagina en localhost:8000
+        volumes: # Le especificamos que debe montar un directorio en el contenedor para visualizarlo en el host
+            - ./:/var/www/html/ # Le decimos que sea la carpeta actual con './' y que la ingrese en '/var/www/html' 
+        links: # Aca se estaria vinculando el contenedor de la base de datos en este
+            - mysql:mysql # A grandes rasgos, copia la direccion ip del contenedor de mysql en el /etc/hosts/
+        depends_on: # Le bloqueamos la inicializacion hasta que el contenedor de base de datos este arriba
+            - mysql
+    mysql: # Llamamos a este servicio que tendra acceso en la red interna de docker atraves de este nombre
+        image: mysql:8.0.16 # Le especificamos una version de la imagen de mysql ya que es una buena practica
+        command: --default-authentication-plugin=mysql_native_password # Con este comando garantizamos las credenciales para iniciar sesion
+        container_name: mysql # Este sera el nombre del contenedor, viene siendo el uso de --name
+        ports: # Habilitamos los puertos que se exponen en el host y los vinculamos con el del contenedor
+            - "3306:3306" # Por defecto el puerto para mysql es 3306
+        volumes: # Conectamos un volumen con la carpeta que maneja toda la informacion de la base de datos
+            - volumen_mysql:/var/lib/mysql # Este volumen no es un directorio sino uno que se ha creado directamente docker, mas abajo se comenta
+        environment: # Le pasamos las variables de entorno o variables de configuracion al contenedor
+            MYSQL_DATABASE: course # Le especificamos que tiene que crear una base de datos llamada 'course'
+            MYSQL_USER: user # Le especificamos que tiene que crear un usuario llamado user
+            MYSQL_PASSWORD: user # Le especificamos su contraseña a esta base de datos
+            MYSQL_ROOT_PASSWORD: root # Le especificamos la contraseña del super usuario root que sera 'root'
+
+    phpmyadmin: # Llamamos a este servicio para poder mostrar y gestionar la base de datos de una manera mas amigable
+        image: phpmyadmin/phpmyadmin:4.8 # Le especificamos una version por buenas practicas
+        container_name: phpmyadmin # Este sera el nombre del contenedor, viene siendo el uso de --name
+        links: # Vinculamos la base de datos a este contenedor
+            - mysql:mysql # Directamente asigna la ip del contenedor por nombre 'mysql' en el /etc/hosts de este contenedor
+        ports: # Habilitamos los puertos por el cual este gestor de base de datos sera controlado
+            - 8080:80 # Por lo tanto podremos manejar la base de datos accediendo al localhost:8080
+        environment: # Le pasamos las variables de configuracion
+            PMA_ARBITRARY: 1 # Con este parametro le permitimos disponibilidad de yo escoger luego las credenciales
+        depends_on:
+            - mysql
+# Esta seccion es importante que es para montar un volumen directamente con docker y que no sea una carpeta de mi sistema
+# Esto es importante ya que si no lo hacemos con volumenes de docker sino volumenes usando directorios como './mi-carpeta' no functionaria
+# Puede funcionar si se estaria usando un sistema operativo de linux que soporta sistemas de archivos ext4 y no ntfs como es en el caso de windows
+volumes:
+    volumen_mysql:
+        external: false
