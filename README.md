@@ -1405,7 +1405,238 @@
   </details>
 </details>
 
+<hr>
+<details>
+  <summary><h1>Clase 20 (Transformacion a API REST)</h1></summary> 
+   
+  <details>
+    <summary><h2>Registro en una API REST</h2></summary>
+  
+  * Uso de versionado en las rutas
+    * `/api/v2.5/auth/register`
+  * Request body con informacion a registrar
+    
+    ```json
+    {"email": "ejemplo@ejemplo.com", "password": "ejemplo"}
+    ```
+
+  * Response body con la informacion registrada 
+    
+    ```json
+    {"message": "usuario registado satisfactoriamente"}
+    ```
+  </details>
+
+  <details>
+    <summary><h2>Inicio de sesion en una API REST</h2></summary>
+
+  * Uso de versionado en las rutas
+    * `/api/v2.5/auth/register`
+  * Request body con informacion para hacer login
+    
+    ```json
+    {"email": "ejemplo@ejemplo.com", "password": "ejemplo"}
+    ```
+
+  * Response body con la informacion del logueo 
+    
+    ```json
+    {"message": "usuario logueado satisfactoriamente", "body": {"token":"jsonwebtoken"}}
+    ```
+
+  </details>
+
+  <details>
+    <summary><h2>Consumo de recursos de la API REST</h2></summary>
+
+  * Al consumir un recurso, por ejemplo `/api/v2.5/movies`, necesitamos mandar nuestras credenciales haciendo el uso del token del login
+  * Enviando el `jsonwebtoken` del login
+    * Viajando como uri params
+
+      ```json
+      /api/v2.5/movies?apikey=mitoken
+      ```
+
+    * Viajando como body request
+
+      ```json
+      {
+        ...,
+        "token":"mitoken",
+        ...
+      }
+      ```
+
+    * Viajando como cookie headers
+
+      ```
+      Cookie: JWT=mitoken
+      ```
+
+    * Viajando como baerer token headers
+
+      ```
+      Authorization: Bearer mitoken
+      ```
+  </details>
+
+</details>
+
+<hr>
+<details>
+  <summary><h1>Clase 21 (Consumo de API REST)</h1></summary> 
+   
+  <details>
+    <summary><h2>Uso de fetch con Javascript</h2></summary>
+
+  * Promesas
+    * Sincronas (no detiene el flujo del programa)
+      * `.then`
+      * `.catch` 
+    * Asincronas (detienen el flujo del programa)
+      * `async`
+      * `await`
+  </details>
+
+  <details>
+    <summary><h2>Peticiones por POST con fetch</h2></summary>
+
+  * Sintaxis
+  * Cabeceras de peticion para enviar informacion en formato JSON
+    
+    ```javascript
+    fetch("http://example.com/api/endpoint/", {
+      method: "post",
+      // Las cabeceras son vital importancia ya que asi le decimos al servidor que procese la informacion enviada como un json
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+
+      // Nos aseguramos de mandar la informacion del OBJETO en formato STRING
+      body: JSON.stringify({
+        name: myName,
+        password: myPassword
+      })
+    })
+    .then( (response) => { 
+      // Luego de resuelta la promesa ejecutariamos la logica correspondiente
+    });
+    ```
+
+  </details>
+
+  <details>
+    <summary><h2>Practica de consumo de API REST con Javascript Vanilla</h2></summary>
+  </details>
+
+</details>
+
+<hr>
+<details>
+  <summary><h1>Clase 22 (Despliegue con Heroku)</h1></summary> 
+   
+  <details>
+    <summary><h2>Configurando Base de Datos</h2></summary>
+
+  * Base de datos gratuita
+    * [PostgreSQL](https://devcenter.heroku.com/articles/heroku-postgresql#connecting-to-heroku-postgres)
+      * [connection](https://devcenter.heroku.com/articles/connecting-heroku-postgres#connecting-with-laravel)
+  </details>
+
+  <details>
+    <summary><h2>Configurando Aplicacion</h2></summary>
+
+  * Uso de [composer](https://devcenter.heroku.com/articles/getting-started-with-php#declare-app-dependencies)
+  * Uso de [Procfile](https://devcenter.heroku.com/articles/getting-started-with-php#define-a-procfile)
+  * Uso de logs en el [php://stderr](https://www.php.net/manual/en/features.commandline.io-streams.php)
+    
+    ```php
+    <?php
+    fwrite(STDERR, "Ha ocurrido un error\n");
+    ```
+  </details>
+
+  <details>
+    <summary><h2>Realizando despliegue</h2></summary>
+
+  * Control de errores con [heroku cli](https://devcenter.heroku.com/articles/heroku-cli#get-started-with-the-heroku-cli)
+  * Configurando variables de entorno
+  </details>
+</details>
+
+<hr>
+<details>
+  <summary><h1>Clase 23 (Clase de Repaso y Consultas)</h1></summary> 
+   
+* Inconvenientes con Heroku
+* Inconvenientes con PostgreSQL
+* Dudas sobre API Rest
+* Dudas sobre Modelos
+* Dudas sobre Eloquent
+</details>
+
+<hr>
+<details>
+  <summary><h1>Clase 24 (Teoria de Servidores)</h1></summary> 
+   
+  <details>
+    <summary><h2>Protocolo IP</h2></summary>
+
+  * Direccionamiento con Bits
+  * Clases de IP
+    * Publica
+    * Privada - [RFC1918](https://es.wikipedia.org/wiki/Red_privada#Redes_privadas_IPv4)
+  * Tipos de IP
+    * IPv4
+    * IPv6
+  * Mascara de Red
+  * Router
+  * Direccion MAC
+  </details>
+
+   
+  <details>
+    <summary><h2>DNS</h2></summary>
+  
+  * Registros (Records)
+    * A
+    * AAAA
+    * CNAME
+  * Comandos utiles
+    * `nslookup` me permite encontrar ip de un dominio
+  </details>
+
+</details>
 
 
+<hr>
+<details>
+  <summary><h1>Clase 25 (Github Actions)</h1></summary> 
+   
+  <details>
+    <summary><h2>¿Que es CI/CD?</h2></summary>
 
+  * Integracion continua con testing unitarios y de integracion
+  * Despliegue continuo con testing e2e
+  </details>
 
+  <details>
+    <summary><h2>Workflows</h2></summary>
+
+  * Definiendo flujos del despliegue con sintaxis `yaml`
+  </details>
+
+  <details>
+    <summary><h2>Despliegue continuo con Heroku</h2></summary>
+
+  * Uso de acciones para despliegue
+  </details>
+
+  <details>
+    <summary><h2>Mucho más...</h2></summary>
+
+  * [Telegram Notify](https://github.com/marketplace/actions/telegram-notify)
+  * [Slack Notify](https://github.com/marketplace/actions/slack-notify)
+  </details>
+</details>
