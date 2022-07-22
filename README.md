@@ -1537,7 +1537,7 @@
     
     ```php
     <?php
-    fwrite(STDERR, "Ha ocurrido un error\n");
+    file_put_contents("php://stderr", "Ha ocurrido un error");
     ```
   </details>
 
