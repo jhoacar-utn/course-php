@@ -12,3 +12,6 @@ RUN docker-php-ext-install -j$(nproc) \
 
 # Dejamos un archivo de configuracion por defecto
 COPY apache.conf /etc/apache2/sites-available/000-default.conf
+
+# Le agregamos un php.ini para cargar configuraciones personalizadas para PHP
+COPY php.ini /usr/local/etc/php/custom-php.ini

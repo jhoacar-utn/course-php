@@ -228,6 +228,9 @@
 
     # Dejamos un archivo de configuracion por defecto
     COPY apache.conf /etc/apache2/sites-available/000-default.conf
+
+    # Le agregamos un php.ini para cargar configuraciones personalizadas para PHP
+    COPY php.ini /usr/local/etc/php/custom-php.ini
     ```
 
     **`apache.conf`**
@@ -242,6 +245,17 @@
             Require all granted
         </Directory>
     </VirtualHost>
+    ```
+
+    **`php.ini`**
+
+    ```php.ini
+    max_input_time = 60
+    memory_limit = 128M
+    post_max_size = 8M
+    file_uploads = On
+    upload_max_filesize = 2M
+    max_file_uploads = 20
     ```
 
   </details>
