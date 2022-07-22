@@ -1,0 +1,3 @@
+# Habilitamos el dynamic routing con una Fallback
+# Esto hara match con aquellas rutas que no se han definido y seran mostradas usando el index.php
+FallbackResource index.php

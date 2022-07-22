@@ -226,14 +226,22 @@
     # servidor de apache
     FROM php:8.1-apache
 
-    # Esta variable contiene la configuracion para habilitar una carpeta llamada /public como 
-    # principal y que el archivo principal (DirectoryIndex) sera el index.php
-    ENV PUBLIC_DIRECTORY="\/var\/www\/html\/public\n\tDirectoryIndex \/index.php\n"
+    # Dejamos un archivo de configuracion por defecto
+    COPY apache.conf /etc/apache2/sites-available/000-default.conf
+    ```
 
-    # Usar el comando 'sed' realiza sustituciones en un archivo o textos, en este caso 
-    # necesitamos añadirle la variable con el contenido de $PUBLIC_DIRECTORY en el archivo de 
-    # configuracion por defecto para apache2
-    RUN sed -i "/<VirtualHost \*:80>/,/<\/VirtualHost>/ s/\/var\/www\/html/$PUBLIC_DIRECTORY/" /etc/apache2/sites-available/000-default.conf
+    **`apache.conf`**
+
+    ```xml
+    <VirtualHost *:80>
+        DocumentRoot /var/www/html
+
+        <Directory /var/www/html>
+            Options +Indexes +FollowSymLinks
+            AllowOverride All
+            Require all granted
+        </Directory>
+    </VirtualHost>
     ```
 
   </details>
@@ -949,39 +957,15 @@
   <details>
     <summary><h2>¿Que es enrutamiento dinamico?</h2></summary>
 
-  * Habilitar enrutamiento dinamico en `apache` con docker
-    * Modificando el `Dockerfile`:
+  * Habilitar enrutamiento dinamico en `apache` con archivo `.htaccess`
+    * Creando archivo `.htaccess` para activar sobreescritura de directivas:
 
-    ```Dockerfile
-      # This string enable /public directory as main
-      ENV PUBLIC_DIRECTORY="\/var\/www\/html\/public\n\tDirectoryIndex \/index.php\n"
-      # This string enable dynamic routing
-      ENV DYNAMIC_ROUTING="<Directory \/var\/www\/html\/public>\n\t\tAllowOverride None\n\t\tOrder Allow,Deny\n\n\t\tFallbackResource \/index.php\n\t\tAllow from All\n\t<\/Directory>\n"
-      # Using 'sed' we add the content between <VirtualHost> directives
-      RUN sed -i "/<VirtualHost \*:80>/,/<\/VirtualHost>/ s/\/var\/www\/html/$PUBLIC_DIRECTORY\n$DYNAMIC_ROUTING/" /etc/apache2/sites-available/000-default.conf
-    ```
-
-  * Caso contrario en el archivo de configuracion de `apache2` garantizar la siguiente [configuracion](https://symfony.com/doc/current/setup/web_server_configuration.html#adding-rewrite-rules)
-
-    ```apache.conf
-    <VirtualHost *:80>
-        
-        DocumentRoot /var/www/html/public
-        DirectoryIndex /index.php
-
-        <Directory /var/www/html/public>
-          
-          AllowOverride None
-          Order Allow,Deny
-          Allow from All
-
-          FallbackResource /index.php
-
-        </Directory>
-
-    </VirtualHost>
-    ```
-
+      ```yml
+      # Habilitamos el dynamic routing con una Fallback
+      # Esto hara match con aquellas rutas que no se han definido y seran mostradas usando el index.php
+      FallbackResource index.php
+      ```
+      
   </details>
 
   <details>
