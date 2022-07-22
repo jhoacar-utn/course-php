@@ -1003,6 +1003,7 @@
   
 </details>
 
+<hr>
 <details>
   <summary><h1>Clase 15 (Introduccion a MVC)</h1></summary>
 
@@ -1166,6 +1167,7 @@
   </details>
 </details>
 
+<hr>
 <details>
   <summary><h1>Clase 16 (Modelos)</h1></summary>
   <details>
@@ -1280,6 +1282,7 @@
     </details>
 </details>
 
+<hr>
 <details>
   <summary><h1>Clase 17 (Clase de Repaso y Consultas)</h1></summary>
 
@@ -1289,6 +1292,7 @@
 
 </details>
 
+<hr>
 <details>
   <summary><h1>Clase 18 (Seguridad en Aplicaciones)</h1></summary>
 
@@ -1377,6 +1381,7 @@
 
 </details>
 
+<hr>
 <details>
   <summary><h1>Clase 19 (Vinculacion de Registro, Login y Todos)</h1></summary> 
    
