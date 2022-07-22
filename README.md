@@ -102,6 +102,7 @@
   * Comandos utiles
     * `docker ps`: Lista todos los contenedores que se estan ejecutando
       * `-a` Lista todos los contenedores incluso aquellos que se han detenido
+      * `-q` Lista los contenedores que se esta ejecutando pero solo mostrando el id
     * `docker run`: Levanta un **nuevo** contenedor con alguna imagen que se especifique, ejemplo: `docker run ubuntu echo "Hello World"` (el texto `echo "Hello World"` es un comando que se va a ejecutar en el contenedor apenas arranque)
       * `--name` Se le especifica un nombre al contenedor, por defecto es aleatorio
       * `-d` Se le especifica al contenedor que se ejecute en segundo plano
@@ -111,13 +112,21 @@
       `docker run -p 9090:80 ubuntu` (la sintaxis es **host_port:container_port** )
       * `-v` Al igual que el parametro `-p` que hace match entre contenedor y host, este parametro nos viene muy util para hacer match entre carpetas, es decir, voy a poder tener archivos en el contenedor que estan en mi maquina, y asi si realizo algun cambio es afectado en ambos, ejemplo: `docker run -v $(pwd):/app` (al escribir `$(pwd)` lo que hago es hacer uso del directorio actual, `$()` permite ejecutar comandos y mostrar la salida y `pwd` es el comando para imprimir la ruta del directorio actual, la sintaxis es **/host/volume/location:/container/storage**)
       * `-e` Asigna variables de entorno adentro del contenedor, ejemplo: `docker run --env VAR1=value1 --env VAR2=value2 ubuntu`
+    * `docker exec`: Ejecuta un comando en un contenedor que se encuentre corriendo
+    * `docker start`: Levanta un contenedor que se encuentre detenido
+    * `docker stop`: Detiene un contenedor que se encuentre corriendo
+    * `docker restart`: Reinicia un contenedor
+    * `docker kill`: Mata un contenedor que se encuentre corriendo, ejemplo: `docker kill $(docker ps -aq)` (Este comando matara todos los contenedores que existan, con el comando `docker ps -aq` muestra todos los ids de los contenedores existentes)
+    * `docker rm`: Elimina un contenedor y toda su informacion, ejemplo: `docker rm $(docker ps -aq)` (Este comando eliminara todos los contenedores que existan, con el comando `docker ps -aq` muestra todos los ids de los contenedores existentes)
+    
   </details>
 
   <details>
     <summary><h2>Docker Compose</h2></summary>
 
   * Configuracion de YAML - `docker-compose.yaml` o `docker-compose.yml`
-    * `docker-compose up -d` Corre todos los contenedores en segundo plano como se especifican en el archivo de configuracion
+    * `docker-compose up -d`: Corre todos los contenedores en segundo plano como se especifican en el archivo de configuracion
+    * `docker-compose down`: Elimina todos los contenedores y la configuracion que se realizo en la red, si o si se necesita el archivo `docker-compose.yaml` para que identifique que eliminar
   </details>
 
 </details>
@@ -371,6 +380,8 @@
     <summary><h2>Sintaxis de clases en PHP</h2></summary>
 
   * Ejemplo de clase base
+    * Atributos
+    * Metodos y [Metodos magicos](https://www.php.net/manual/es/language.oop5.magic.php)
   * Ejemplo de Cohesion de clase base (reduccion de complejidad en clases)
   * Ejemplo de Acoplamiento de clase base (El bajo acoplamiento es frecuentemente una señal de un sistema bien estructurado y de un buen diseño de software)
   * Ejemplo de Encapsulamiento de clase base (ocultamiento del estado)
@@ -391,6 +402,7 @@
     * Metodos y variables estaticas
       * Constantes estaticas - `const`
       * Variables estaticas - `static`
+        * Uso de `::class`
       * Metodos estaticos - `static function`
   * Herencia simple
     * Uso de `extends` entre clases
@@ -544,7 +556,7 @@
 
 <hr>
 <details>
-  <summary><h1>Clase 11 (Configuracion de Proyecto con composer.json)</h1></summary>  
+  <summary><h1>Clase 11 (Configuracion de Proyecto con Composer)</h1></summary>  
 
   <details>
     <summary><h2>Atributos de composer.json</h2></summary>
@@ -582,18 +594,242 @@
     <summary><h2>¿Que es un linter? ¿Para que me puede servir?</h2></summary>
 
   * [PHP-CS-Fixer](https://github.com/FriendsOfPHP/PHP-CS-Fixer) (estandar actual)
+
+    * `composer require --dev friendsofphp/php-cs-fixer`
+    * `.php-cs-fixer.php`
+
+    ```php
+    <?php
+
+    use PhpCsFixer\Config;
+    use PhpCsFixer\Finder;
+
+    $rules = [
+        '@PSR12' => true,
+        'array_syntax' => ['syntax' => 'short'],
+        'binary_operator_spaces' => [
+            'default' => 'single_space',
+            'operators' => ['=>' => null]
+        ],
+        'blank_line_after_namespace' => true,
+        'blank_line_after_opening_tag' => true,
+        'blank_line_before_statement' => [
+            'statements' => ['return']
+        ],
+        'braces' => true,
+        'cast_spaces' => true,
+        'class_attributes_separation' => [
+            'elements' => [
+              'method' => 'one',
+              'trait_import' => 'none'
+            ]
+        ],
+        'class_definition' => true,
+        'concat_space' => [
+            'spacing' => 'one'
+        ],
+        'declare_equal_normalize' => true,
+        'elseif' => true,
+        'encoding' => true,
+        'full_opening_tag' => true,
+        'fully_qualified_strict_types' => true,
+        'function_declaration' => true,
+        'function_typehint_space' => true,
+        'heredoc_to_nowdoc' => true,
+        'include' => true,
+        'increment_style' => ['style' => 'post'],
+        'indentation_type' => true,
+        'linebreak_after_opening_tag' => true,
+        'line_ending' => true,
+        'lowercase_cast' => true,
+        'constant_case' => true,
+        'lowercase_keywords' => true,
+        'lowercase_static_reference' => true,    
+        'magic_method_casing' => true,
+        'magic_constant_casing' => true,
+        'method_argument_space' => true,
+        'native_function_casing' => true,
+        'no_alias_functions' => true,
+        'no_extra_blank_lines' => [
+            'tokens' => [
+                'extra',
+                'throw',
+                'use'
+            ]
+        ],
+        'no_blank_lines_after_class_opening' => true,
+        'no_blank_lines_after_phpdoc' => true,
+        'no_closing_tag' => true,
+        'no_empty_phpdoc' => true,
+        'no_empty_statement' => true,
+        'no_leading_import_slash' => true,
+        'no_leading_namespace_whitespace' => true,
+        'no_mixed_echo_print' => [
+            'use' => 'echo'
+        ],
+        'no_multiline_whitespace_around_double_arrow' => true,
+        'multiline_whitespace_before_semicolons' => [
+            'strategy' => 'no_multi_line'
+        ],
+        'no_short_bool_cast' => true,
+        'no_singleline_whitespace_before_semicolons' => true,
+        'no_spaces_after_function_name' => true,
+        'no_spaces_around_offset' => true,
+        'no_spaces_inside_parenthesis' => true,
+        'no_trailing_comma_in_list_call' => true,
+        'no_trailing_comma_in_singleline_array' => true,
+        'no_trailing_whitespace' => true,
+        'no_trailing_whitespace_in_comment' => true,
+        'no_unneeded_control_parentheses' => true,
+        'no_unreachable_default_argument_value' => true,
+        'no_useless_return' => true,
+        'no_whitespace_before_comma_in_array' => true,
+        'no_whitespace_in_blank_line' => true,
+        'normalize_index_brace' => true,
+        'not_operator_with_successor_space' => false,
+        'object_operator_without_whitespace' => true,
+        'ordered_imports' => ['sort_algorithm' => 'alpha'],
+        'phpdoc_indent' => true,
+        'general_phpdoc_tag_rename' => true,
+        'phpdoc_inline_tag_normalizer' => true,
+        'phpdoc_tag_type' => true,
+        'phpdoc_no_access' => true,
+        'phpdoc_no_package' => true,
+        'phpdoc_no_useless_inheritdoc' => true,
+        'phpdoc_scalar' => true,
+        'phpdoc_single_line_var_spacing' => true,
+        'phpdoc_summary' => true,
+        'phpdoc_to_comment' => true,
+        'phpdoc_trim' => true,
+        'phpdoc_types' => true,
+        'phpdoc_var_without_name' => true,
+        'psr_autoloading' => true,
+        'self_accessor' => true,
+        'short_scalar_cast' => true,
+        'simplified_null_return' => false,
+        'single_blank_line_at_eof' => true,
+        'single_blank_line_before_namespace' => true,
+        'single_class_element_per_statement' => true,
+        'single_import_per_statement' => true,
+        'single_line_after_imports' => true,
+        'single_line_comment_style' => [
+            'comment_types' => ['hash']
+        ],
+        'single_quote' => true,
+        'space_after_semicolon' => true,
+        'standardize_not_equals' => true,
+        'switch_case_semicolon_to_colon' => true,
+        'switch_case_space' => true,
+        'ternary_operator_spaces' => true,
+        'trailing_comma_in_multiline' => true,
+        'trim_array_spaces' => true,
+        'unary_operator_spaces' => true,
+        'visibility_required' => [
+            'elements' => ['method', 'property']
+        ],
+        'whitespace_after_comma_in_array' => true,
+        'no_unused_imports' => true,
+    ];
+
+
+    $finder = Finder::create()
+        ->in([
+            __DIR__ . '/src',
+            __DIR__ . '/tests',
+        ])
+        ->name('*.php')
+        ->ignoreDotFiles(true)
+        ->ignoreVCS(true);
+
+    $config = new Config();
+    return $config->setFinder($finder)
+        ->setRules($rules)
+        ->setRiskyAllowed(true)
+        ->setUsingCache(true);
+    ```
+
+    * `composer.json`
+
+    ```json
+      ...,
+      {
+        "scripts":{
+            ...
+            "lint": "php-cs-fixer fix -vvv --show-progress=dots",
+            ...
+
+        }
+      }
+    ```
+
+    * `.gitignore`
+
+    ```.gitignore
+    ...
+    .php-cs-fixer.cache
+    ...
+    ```
+
   </details>
 
   <details>
     <summary><h2>Analizador de codigo</h2></summary>
 
-  * PHPStan
+  * [PHPStan](https://phpstan.org/)
+
+    * `composer require --dev phpstan/phpstan`
+    * `phpstan.neon`
+
+    ```neon
+    parameters:
+    
+      level: 9
+  
+      paths:
+          - src
+          - tests
+          
+      inferPrivatePropertyTypeFromConstructor: true
+      checkMissingIterableValueType: false
+    ```
+    * `composer.json`
+
+    ```json
+      ...,
+      {
+        "scripts":{
+            ...
+            "analyse": "phpstan analyse -c phpstan.neon",
+            ...
+
+        }
+      }
+    ```
+
+
   </details>
 
   <details>
     <summary><h2>Test unitarios con PHPUnit</h2></summary>
 
   * [PHPUnit](https://phpunit.de/getting-started/phpunit-9.html) (mas usado)
+
+    * `composer require --dev phpunit/phpunit`
+    * `composer.json`
+
+    ```json
+      ...,
+      {
+        "scripts":{
+            ...
+            "test": "phpunit tests",
+            ...
+
+        }
+      }
+    ```
+
+
   </details>
 
   <details>
@@ -603,8 +839,35 @@
   * [PHPDoc](https://www.phpdoc.org/) (recomandable usarlo con docker)
 
     ```docker
-    docker run --rm -v ${PWD}:/data phpdoc/phpdoc:3
+    # La variable PWD contiene la ruta actual, podria usarse ${PWD} o el comando $(pwd)
+    docker run --rm -v ${PWD}:/data phpdoc/phpdoc:3 --config phpdoc.xml
     ```
+
+    * `phpdoc.xml`
+    
+    ```xml
+    <?xml version="1.0" encoding="UTF-8" ?>
+    <phpdocumentor
+            configVersion="3"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns="https://www.phpdoc.org"
+    >
+        <title>Documentacion de mi proyecto</title>
+        <paths>
+            <output>docs</output>
+        </paths>
+
+    </phpdocumentor>
+    ```
+
+    * `.gitignore`
+    
+    ```.gitignore
+    ...
+    .phpdoc
+    ....
+    ```
+
   </details>
 </details>
 
@@ -722,10 +985,422 @@
   </details>
 
   <details>
+    <summary><h2>Introduccion a API REST</h2></summary>
+
+  * ¿Que es una API REST?
+    * API (Interface de la Aplicacion)
+    * REST (Transferencia de Estado Representacional)
+      * Respuesta de endpoints (URI y Verbo) mediante uso de JSON
+    * Cabeceras de respuesta
+      * `Content-Type: application/json` vs `Content-Type: text/html;`
+  </details>
+
+  <details>
     <summary><h2>Practica para crear enrutamiento dinamico usando peticiones `GET` y `POST`</h2></summary>
+
+  * Concepto de Controlador en las rutas
   </details>
   
 </details>
+
+<details>
+  <summary><h1>Clase 15 (Introduccion a MVC)</h1></summary>
+
+  <details>
+    <summary><h2>¿Que es MVC?</h2></summary>
+
+  * Explicacion sencilla basada en arquitectura de videojuegos
+  * Concepto de Rutas
+  * Concepto de Controlador
+  * Concepto de Modelo
+  * Concepto de Vista
+
+  </details>
+
+  <details>
+    <summary><h2>¿Que es un ORM? ¿Que es un ODM? <a href="https://es.acervolima.com/diferencia-entre-rdbms-y-oodbms/">Diferencias</a></h2></summary>
+
+  * [ORM](https://www2.deloitte.com/es/es/pages/technology/articles/que-es-orm.html) (Object Relational Mapper - Mapeador de Relaciones de Objetos)
+    * [Eloquent](https://github.com/illuminate/database), [Doctrine](https://www.doctrine-project.org/projects/doctrine-orm/en/2.11/tutorials/getting-started.html), ...
+      * RDBMS (Relational DataBase Management System - Sistema Gestor de Base de Datos Relaciones)
+        * MySQL
+        * PostgreSQL
+        * SQL Server
+        * Oracle
+        * Microsoft Access
+        * ...
+  * ODM (Object Documents Mapper - Mapeador de Documentos de Objetos)
+    * [Doctrine](https://github.com/doctrine/mongodb-odm), [Eloquent (driver)](https://github.com/jenssegers/laravel-mongodb)
+      * [OODBMS](https://www.acens.com/wp-content/images/2014/02/bbdd-nosql-wp-acens.pdf) (Object Oriented DataBase Management System - Sistema Gestor de Base de Datos Orientada a Objetos)
+        * MongoDB
+        * DynamoDB
+        * Cassandra
+        * Redis
+        * CouchDB
+  </details>
+  <details>
+    <summary><h2>Introduccion a Eloquent ORM</h2></summary>
+
+  * Extensiones necesarias 
+    * pdo_mysql
+    
+    ```Dockerfile
+    # Usando el parametro -j le decimos la velocidad de instalacion y que sera de
+    # acuerdo a la cantidad de numero de procesamiento que tenga que sera $(nproc)
+    # Instalamos entonces las extensiones mysqli, pdo y pdo_mysql para poder comunicarnos
+    # con la base de datos de MySQL
+    RUN docker-php-ext-install -j$(nproc) \
+            mysqli \
+            pdo \
+            pdo_mysql \
+    ```
+  * `docker-compose up -d --build`
+    * Volvemos a levantar todos los contenedores pero con la nueva imagen actualizada
+  * `composer require illuminate/database`
+  * Creacion del primer modelo para una lista de tareas
+
+    ```php
+    <?php
+
+    /**
+     * Cargamos el autoloader de composer que se encuentra en la carpeta 'vendor'
+    */
+    require_once __DIR__.'/../vendor/autoload.php';
+
+    /**
+     * Cargamos la clase Manager como Capsule
+    */
+    use Illuminate\Database\Capsule\Manager as Capsule;
+
+    /**
+     * Creamos una instancia del Manager
+    */
+    $capsule = new Capsule;
+
+    /**
+     * Añadimos la informacion para la conexio a la base de datos local
+     * El host es 'mysql' debido a que si es como tiene comunicacion con el otro contenedor
+     * Usamos las credenciales que le habiamos asignado
+    */
+    $capsule->addConnection([
+        'driver' => 'mysql',
+        'host' => 'mysql',
+        'database' => 'course',
+        'username' => 'user',
+        'password' => 'user',
+        'charset' => 'utf8',
+        'collation' => 'utf8_unicode_ci',
+        'prefix' => '',
+    ]);
+
+    /**
+     * Esto asegura que todos los metodos estaticos de conexio a modelos
+     * Sean ejecutados directamente en esta 'capsula' de base de datos
+    */
+    $capsule->setAsGlobal();
+
+    /**
+     * Arrancamos a Eloquent para que se conecte a la base de datos
+    */
+    $capsule->bootEloquent();
+
+    /**
+     * Creamos una tabla llamada 'users' que contendra los campos
+     * @var int id (incremental)
+     * @var string email (unico en la tabla)
+     * @var string todo (una lista de tareas)
+     * @var timestamps agrega dos columnas 'created_at' y 'updated_at' en la tabla 
+    */
+    Capsule::schema()->create('users', function ($table) {
+      $table->increments('id');
+      $table->string('email')->unique();
+      $table->string('todo');
+      $table->timestamps();
+    });
+
+    /**
+     * Clase usada para representar los datos del usuario
+    */
+    class User extends Illuminate\Database\Eloquent\Model {
+      /**
+       * La tabla que sera asociada al modelo
+       * @var string
+      */
+      protected $table = 'users';
+    }
+
+    /**
+     * Creamos una nueva instancia de nuestro modelo para poder asignarle datos
+    */
+    $user = new User();
+    /**
+     *  Le asignamos el valor a los atributos del modelo 
+    */
+    $user->email = "ejemplo@ejemplo.com";
+    $user->todo = "sacar a pasear al perro";
+    /** 
+     * Procedemos a guardar esa informacion
+    */
+    $user->save();
+
+    /**
+     * Luego de guardados los datos procedemos a traerlos con el metodo all();
+     * Procedemos posteriormente a mostrarlos por pantalla
+    */
+    $users = User::all();
+
+    foreach($users as $user)
+    {
+      echo "$user->email - $user->todo <br>";
+    }
+    ```
+
+  </details>
+
+  <details>
+    <summary><h2>¿Que son las migraciones?</h2></summary>
+
+  * Crear tablas
+  * Modificar tablas
+  * Regresar tablas
+  </details>
+</details>
+
+<details>
+  <summary><h1>Clase 16 (Modelos)</h1></summary>
+  <details>
+      <summary><h2>Modelo para usuario</h2></summary>
+
+  * 
+    ```php
+    <?php
+
+    use Illuminate\Database\Capsule\Manager as Capsule;
+
+    Capsule::schema()->create('users', function ($table) {
+      $table->increments('id');
+      $table->string('email')->unique();
+      $table->timestamps();
+    });
+    ```
+
+  * 
+    ```php
+    <?php
+
+    use Illuminate\Database\Eloquent\Model;
+    /**
+     * Clase usada para representar los datos del usuario
+    */
+    class User extends Model {
+      /**
+       * La tabla que sera asociada al modelo
+       * @var string
+      */
+      protected $table = 'users';
+
+      /**
+       * Accedemos a las lista de tareas de este usuario
+       * por medio de una relacion de Uno a Muchos - (One to Many)
+       * lo que hacemos aca es devolver una instancia del modelo Todo
+       * pero que coincidan el 'user_id' con el 'id' del usuario
+       * @return array{Todo}
+       * 
+      */
+      public function todos()
+      {
+        return $this->hasMany(Todo::class, 'user_id', 'id');
+      }
+    }
+    ```
+
+  </details>
+
+  <details>
+      <summary><h2>Modelo para tareas y su relacion</h2></summary>
+
+  * 
+    ```php
+    <?php
+
+    use Illuminate\Database\Capsule\Manager as Capsule;
+
+    Capsule::schema()->create('todos', function ($table) {
+      /**
+       * Crea una columna incremental para un identificador unico de la tarea
+      */
+      $table->id();
+      /**
+       * Crea una relacion mediante una llave foranea llamada 'user_id'
+       * Asi de esta manera estamos conectando esta tabla con la tabla 'users'
+       * Le decimos que cuando se elimine el usuario tambien se eliminara este dato
+      */
+      $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+      /**
+       * Esta propiedad de un texto le decimos un maximo de caracteres a insertar
+       * y que ademas puede tener datos o no, es decir, es nullable
+      */
+      $table->string('text', 100)->nullable();
+      $table->timestamps();
+    });
+    ```
+
+  * 
+    ```php
+    <?php
+
+    use Illuminate\Database\Eloquent\Model;
+    /**
+     * Clase usada para representar las tareas por hacer del usuario
+     * Los modelos son declarados en SINGULAR
+    */
+    class Todo extends Model {
+      /**
+       * La tabla que sera asociada al modelo
+       * @var string
+      */
+      protected $table = 'todos';
+      /**
+       * Accedemos al usuario por medio de una relacion de Uno a Muchos - (One to Many)
+       * pero en este caso en el sentido contrario que seria de pertenencia
+       * @return User
+      */
+      public function user()
+      {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+      }
+    }
+    ```
+  </details>
+
+   <details>
+      <summary><h2>Practica CRUD para una lista de tareas</h2></summary>
+    
+  * CRUD - Create, Read, Update and Delete (Crear, Leer, Actualizar y Eliminar)
+    </details>
+</details>
+
+<details>
+  <summary><h1>Clase 17 (Clase de Repaso y Consultas)</h1></summary>
+
+  * Inconvenientes con Docker y MySQL
+  * Dudas sobre Eloquent ORM
+  * Realizacion de mini proyecto usando CRUD para una lista de tareas
+
+</details>
+
+<details>
+  <summary><h1>Clase 18 (Seguridad en Aplicaciones)</h1></summary>
+
+  
+  <details>
+      <summary><h2>¿Como hacer un registro de usuarios?</h2></summary>
+
+  * Formulario de Registro con correo y contraseña
+  * Estandar de encriptacion de contraseñas
+    * Bcrypt
+      * [password_hash()](https://www.php.net/manual/es/function.password-hash.php)
+      * [password_verify()](https://www.php.net/manual/es/function.password-verify.php)
+  </details>
+
+  <details>
+    <summary><h2>¿Como hacer un login de usuarios?</h2></summary>
+   
+   * Formulario de Login con correo y contraseña
+   * Estandar de verificacion por token
+    * [JWT](https://jwt.io/) (Json Web Token)
+      * [Librerias](https://jwt.io/libraries?language=PHP)
+        * `composer require firebase/php-jwt`
+
+        ```php
+        use Firebase\JWT\JWT;
+        use Firebase\JWT\Key;
+
+        $key = 'ejemplo de clave ultra secreta';
+        $payload = [
+            'name' => 'pedro perez',
+            'email' => 'ejemplo@ejemplo.com',
+        ];
+
+        /**
+        * IMPORTANT:
+        * You must specify supported algorithms for your application. See
+        * https://tools.ietf.org/html/draft-ietf-jose-json-web-algorithms-40
+        * for a list of spec-compliant algorithms.
+        */
+        $jwt = JWT::encode($payload, $key, 'HS256');
+        $decoded = JWT::decode($jwt, new Key($key, 'HS256'));
+
+        print_r($decoded);
+
+        /*
+        NOTE: This will now be an object instead of an associative array. To get
+        an associative array, you will need to cast it as such:
+        */
+
+        $decoded_array = (array) $decoded;
+
+        /**
+        * You can add a leeway to account for when there is a clock skew times between
+        * the signing and verifying servers. It is recommended that this leeway should
+        * not be bigger than a few minutes.
+        *
+        * Source: http://self-issued.info/docs/draft-ietf-oauth-json-web-token.html#nbfDef
+        */
+        JWT::$leeway = 60; // $leeway in seconds
+        $decoded = JWT::decode($jwt, new Key($key, 'HS256'));
+        ```
+
+      * Uso de cabeceras para asignar el token de sesion iniciada
+        * Por cookies:
+          * [setcookie()](https://www.php.net/manual/es/function.setcookie.php)  
+        * Por cabecera personalizada:
+          * [header()](https://www.php.net/manual/es/function.header.php)
+
+          ```php
+          <?php
+          header('X-Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...');
+          ```
+
+   </details>
+
+  <details>
+    <summary><h2>¿Como validar credenciales validas?</h2></summary>
+  
+
+  * Luego de ser enviado el formulario de login, podriamos asignarle una **cookie de sesion**
+  * Esta **cookie** contendra el **JWT** que le permite el acceso a todos los recursos de la app
+    * Uso de la variable `$_COOKIE` para obtener el token, extraer la informacion que se ha firmado y asi buscarla en la base de datos y tener los datos del usuario
+    * Para hacer [redireccionamiento](https://stackoverflow.com/questions/768431/how-do-i-make-a-redirect-in-php) podriamos hacer uso de la cabecera `Location`
+
+  </details>
+
+</details>
+
+<details>
+  <summary><h1>Clase 19 (Vinculacion de Registro, Login y Todos)</h1></summary> 
+   
+  <details>
+    <summary><h2>Incorporacion de Frameworks de diseño</h2></summary>
+    
+  * [Bootstrap](https://getbootstrap.com/docs/5.2/getting-started/download/)
+  * [Materialize](https://materializecss.com/getting-started.html)
+  </details>
+
+  <details>
+    <summary><h2>Incorporacion de Imagenes</h2></summary>
+    
+  * Manejo de subida de archivos
+  </details>
+
+  <details>
+    <summary><h2>Manejo de cierre de sesión</h2></summary>
+    
+  * Invalidar o borrar la cookie de sesion
+  </details>
+</details>
+
+
 
 
 
