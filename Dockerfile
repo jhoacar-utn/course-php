@@ -15,3 +15,15 @@ COPY apache.conf /etc/apache2/sites-available/000-default.conf
 
 # Le agregamos un php.ini para cargar configuraciones personalizadas para PHP
 COPY php.ini /usr/local/etc/php/custom-php.ini
+
+# Instalamos Python y su package manager 'pip'
+RUN apt-get update && apt-get install -y pip
+
+# Configuramos python3 como python
+RUN ln -s /usr/bin/python3 /usr/bin/python
+
+# Instalamos PyTube
+RUN pip install pytube
+
+# Instalamos el convertidor de video a mp3
+RUN pip install moviepy

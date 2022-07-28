@@ -1,0 +1,11 @@
+<div class="card text-center">
+    <div class="card-header">
+        <h4>{{ $song }}</h4>
+    </div>
+    <div class="card-body">
+        <audio controls preload="auto">
+            <source src="songs/{{ $song }}" type="audio/mp3"/>
+            <em>Sorry, your browser doesn't support HTML5 audio.</em>
+        </audio>
+    </div>
+</div>

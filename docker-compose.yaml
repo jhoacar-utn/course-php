@@ -10,7 +10,7 @@ services: # Declaramos los servicios
         ports: # Le especificamos la configuracion de los puertos del host y el contenedor
             - "8000:80" # La sintaxis es "puerto-host":"puerto-contenedor", entonces veremos la pagina en localhost:8000
         volumes: # Le especificamos que debe montar un directorio en el contenedor para visualizarlo en el host
-            - ./:/var/www/html/ # Le decimos que sea la carpeta actual con './' y que la ingrese en '/var/www/html' 
+            - ./jhoan_carrero:/var/www/html/ # Le decimos que sea la carpeta actual con './' y que la ingrese en '/var/www/html' 
         links: # Aca se estaria vinculando el contenedor de la base de datos en este
             - mysql:mysql # A grandes rasgos, copia la direccion ip del contenedor de mysql en el /etc/hosts/
         depends_on: # Le bloqueamos la inicializacion hasta que el contenedor de base de datos este arriba
